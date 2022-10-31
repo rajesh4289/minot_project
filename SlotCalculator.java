@@ -11,7 +11,10 @@ public class SlotCalculator {
     	File Data = new File(scanner.nextLine());
         System.out.print("Enter Timeslot of knapsack: ");
         int Timeslot  = scanner.nextInt();	
+        System.out.print("Enter the required TRP : ");
+        int requiredTrp  = scanner.nextInt();	
         scanner.close();
+        
         Scanner fscanner = new Scanner (Data);
         ArrayList<String> DataArray = new ArrayList<String>(); 
         while(fscanner.hasNext()) {
@@ -24,20 +27,25 @@ public class SlotCalculator {
     	//int Timeslot = Integer.parseInt(DataArray.get(0)); 
         int[] Time = new int[Size + 1];
         int[] Cost = new int[Size + 1];
-        int[] TRP = new int[Size + 1];
         String [] Brand= new String [Size + 1];
-		for(int i = 1; i < DataArray.size(); i++) 
+        int [] currentTrp = new int[Size + 1];
+		for(int i = 0; i < DataArray.size(); i++) 
         {
 			String[] split = DataArray.get(i).split(",");
+            currentTrp[i] = Integer.parseInt(split[3]);
+            if (requiredTrp <=currentTrp[i]){
             Brand[i] = (split[0]);
 			Time[i] = Integer.parseInt(split[1]);
 			Cost[i] = Integer.parseInt(split[2]);
-            TRP[i] = Integer.parseInt(split[3]);
+            }
+            else{
+                i++;
+            }
 		}
-		Finals.solve(Brand,Time, Cost, Timeslot, Size, TRP);
+		Finals.solve(Brand,Time, Cost, Timeslot, Size,currentTrp);
     }
    
-    public void solve(String [] Brand,int[] Time, int[] Cost, int Timeslot, int size, int[] TRP)
+    public void solve(String [] Brand,int[] Time, int[] Cost, int Timeslot, int size,int [] currentTrp)
     {
     	// matrix which will store results
         int[][] Final = new int[size + 1][Timeslot + 1];
@@ -66,7 +74,7 @@ public class SlotCalculator {
                 continue;
             else {
                 
-                System.out.println( Brand[i-1] +("   ")+ Time[i - 1]+("   ")+TRP[i - 1]);
+                System.out.println( Brand[i - 1] +("   ")+ Time[i - 1]+("   ")+ currentTrp[i - 1] );
                 // value is deducted as weight is included in knapsack
                 Revenue = Revenue - Cost[i - 1];
                 w = w - Time[i - 1];
